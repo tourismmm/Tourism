@@ -1,10 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 
 function Blogsform() {
+  const [formData, setFormData] = useState({
+    username: "",
+    description: "",
+    image: null,
+  });
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
+    const blogData = new FormData();
+    blogData.append("username", formData.username);
+    blogData.append("description", formData.description);
+    blogData.append("image", formData.image);
+
+    try {
+      const response = await axios.post("/", blogData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("Blog added successfully:", response.data);
+    } catch (error) {
+      console.error("Error adding blog:", error);
+    }
+  };
+  const handleInputChange = (event) => {
+    if (event.target.name === "image") {
+      setFormData({
+        ...formData,
+        [event.target.name]: event.target.files[0],
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [event.target.name]: event.target.value,
+      });
+    }
+  };
+
   return (
-    <section class=" space-y-12 flex flex-col items-center justify-center px-6 py-8 mx-auto">
-      <form class="formborder ">
-        <div class="space-y-12 flex flex-col items-center justify-center px-6 py-8 mx-auto">
+    <section class=" space-y-12 flex flex-col items-center justify-center px-6 py-40 mx-auto">
+      <hr />
+      <form class="formborder" onSubmit={handleFormSubmit}>
+        <div class="space-y-12 flex flex-col items-center justify-center px-6 py-8 mx-auto ">
           <div class="border-b border-gray-900/10 pb-12">
             <h2 class="text-base font-semibold leading-7 text-gray-900">
               Add Blog
@@ -28,7 +69,8 @@ function Blogsform() {
                       type="text"
                       name="username"
                       id="username"
-                      autocomplete="username"
+                      value={formData.username}
+                      onChange={handleInputChange}
                       class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                       placeholder="author"
                     />
@@ -43,21 +85,26 @@ function Blogsform() {
                 >
                   Add Photo
                 </label>
-                <input type="file" id="img" name="img" accept="image/*" />
+                <input
+                  type="file"
+                  id="img"
+                  onChange={handleInputChange}
+                  name="image"
+                  accept="image/*"
+                />
               </div>
 
               <div class="col-span-full">
-                <label
-                  for="about"
-                  class="block text-sm font-medium leading-6 text-gray-900"
-                >
+                <label class="block text-sm font-medium leading-6 text-gray-900">
                   Description
                 </label>
                 <div class="mt-2">
                   <textarea
-                    id="about"
-                    name="about"
+                    id="description"
+                    name="description"
                     rows="3"
+                    value={formData.description}
+                    onChange={handleInputChange}
                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   ></textarea>
                 </div>

@@ -1,8 +1,56 @@
-import React from "react";
 import Header from "../components/Header";
 import logo from "../assets/logo.png";
+import React, { useState } from "react";
+import axios from "axios";
 
 function Register() {
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [errors, setErrors] = useState({});
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const validateForm = () => {
+    let errors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email || !emailRegex.test(formData.email)) {
+      errors.email = "Invalid email address";
+    }
+
+    if (!formData.password || formData.password.length < 6) {
+      errors.password = "Password must be at least 6 characters long";
+    }
+
+    return Object.keys(errors).length === 0;
+  };
+
+  const redirectToLogin = () => {
+    window.location.href = "/login";
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/users/signup",
+          formData
+        );
+        console.log(response.data.message);
+        redirectToLogin();
+      } catch (error) {
+        console.error("Error registering user:", error);
+        setErrors(error.response.data.errors);
+      }
+    }
+  };
   return (
     <>
       <Header />
@@ -20,7 +68,7 @@ function Register() {
               <h1 class="font text-xl  leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 Create and account
               </h1>
-              <form class="space-y-4 md:space-y-6" action="#">
+              <form class="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                     Your FirstName
@@ -49,16 +97,23 @@ function Register() {
                 </div>
                 <div>
                   <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Your UserName
+                    UserName
                   </label>
                   <input
                     type="text"
-                    name="userName"
-                    id="userName"
+                    name="username"
+                    id="username"
+                    value={formData.username}
+                    onChange={handleInputChange}
                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="userName"
+                    placeholder="username"
                     required=""
                   />
+                  {errors.username && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.username}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -72,10 +127,15 @@ function Register() {
                     type="email"
                     name="email"
                     id="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="name@company.com"
                     required=""
                   />
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                  )}
                 </div>
                 <div>
                   <label
@@ -88,26 +148,37 @@ function Register() {
                     type="password"
                     name="password"
                     id="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
                     placeholder="••••••••"
                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required=""
                   />
+                  {errors.password && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.password}
+                    </p>
+                  )}
                 </div>
                 <div>
-                  <label
-                    for="confirm-password"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Confirm password
+                  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Confirm Password
                   </label>
                   <input
-                    type="confirm-password"
-                    name="confirm-password"
-                    id="confirm-password"
+                    type="password"
+                    name="confirmPassword"
+                    id="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
                     placeholder="••••••••"
                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required=""
                   />
+                  {errors.confirmPassword && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.confirmPassword}
+                    </p>
+                  )}
                 </div>
                 <button
                   type="submit"
