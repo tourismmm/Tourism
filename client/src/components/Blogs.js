@@ -10,7 +10,7 @@ function Blogs() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/home")
+      .get("https://jsonplaceholder.typicode.com/posts")
       .then((response) => {
         setBlogData(response.data);
       })
