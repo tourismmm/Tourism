@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Blogs from "./components/Blogs";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import BlogDetails from "./pages/BlogDetails";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Route path="/blogs" element={<Blogs />} />
             <Route path="/signup" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/blog/:id" element={<BlogDetails />} />
           </Routes>
         </BrowserRouter>
       </header>

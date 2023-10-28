@@ -1,12 +1,60 @@
-import React from "react";
 import Header from "../components/Header";
 import logo from "../assets/logo.png";
+import React, { useState } from "react";
+import axios from "axios";
 
 const Login = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({});
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const validateForm = () => {
+    let errors = {};
+
+    if (!formData.username.trim()) {
+      errors.username = "Username is required";
+    }
+
+    const usernamePattern = /^[a-zA-Z0-9_]+$/;
+    if (!formData.username || !usernamePattern.test(formData.username)) {
+      errors.username =
+        "Invalid username format. Please use only letters, numbers, and underscore.";
+    }
+
+    if (!formData.password || formData.password.length < 6) {
+      errors.password = "Password must be at least 6 characters long";
+    }
+
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/users/signin",
+          formData
+        );
+        console.log(response.data.message);
+      } catch (error) {
+        console.error("Error logging in:", error);
+        setErrors(error.response.data.errors);
+      }
+    }
+  };
+
   return (
     <>
       <Header />
-
       <section class="bg-gray-50 dark:bg-gray-900">
         <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
           <a
@@ -21,7 +69,7 @@ const Login = () => {
               <h1 class="text-xl font -bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 Sign in to your account
               </h1>
-              <form class="space-y-4 md:space-y-6" action="#">
+              <form class="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label class="block mb-2 text-sm font-medium text-gray-800 dark:text-white">
                     Your Username
@@ -30,10 +78,17 @@ const Login = () => {
                     type="text"
                     name="username"
                     id="username"
+                    value={formData.username}
+                    onChange={handleInputChange}
                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="UserName"
                     required=""
                   />
+                  {errors.username && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.username}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label
@@ -46,10 +101,17 @@ const Login = () => {
                     type="password"
                     name="password"
                     id="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
                     placeholder="••••••••"
                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required=""
                   />
+                  {errors.password && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.password}
+                    </p>
+                  )}
                 </div>
                 <div class="flex items-center justify-between">
                   <div class="flex items-start">
