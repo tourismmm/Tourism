@@ -69,6 +69,9 @@ console.log(blogData)
                 <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                   {blog.title}
                 </h5>
+                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  {blog.username}
+                </h5>
               </a>
               <Link to={`/blog/${blog.id}`}>
                 <button

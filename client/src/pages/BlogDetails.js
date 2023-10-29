@@ -35,6 +35,10 @@ function BlogDetails() {
               <p className="mb-4">
                 {blogData.detail ? blogData.detail : "Content Not Available"}
               </p>
+              <p className="mb-4">
+                {blogData.username ? blogData.username : "Content Not Available"}
+              </p>
+              
             </div>
           ) : (
             <p>Loading...</p>
