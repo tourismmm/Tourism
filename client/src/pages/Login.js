@@ -2,10 +2,11 @@ import Header from "../components/Header";
 import logo from "../assets/logo.png";
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
@@ -14,18 +15,13 @@ const Login = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
+  const history = useNavigate();
   const validateForm = () => {
     let errors = {};
 
-    if (!formData.username.trim()) {
-      errors.username = "Username is required";
-    }
-
-    const usernamePattern = /^[a-zA-Z0-9_]+$/;
-    if (!formData.username || !usernamePattern.test(formData.username)) {
-      errors.username =
-        "Invalid username format. Please use only letters, numbers, and underscore.";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email || !emailRegex.test(formData.email)) {
+      errors.email = "Invalid email address";
     }
 
     if (!formData.password || formData.password.length < 6) {
@@ -41,9 +37,10 @@ const Login = () => {
     if (validateForm()) {
       try {
         const response = await axios.post(
-          "http://localhost:3000/users/signin",
+          "http://localhost:5000/users/signin",
           formData
         );
+        history("/");
         console.log(response.data.message);
       } catch (error) {
         console.error("Error logging in:", error);
@@ -70,24 +67,25 @@ const Login = () => {
                 Sign in to your account
               </h1>
               <form class="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-                <div>
-                  <label class="block mb-2 text-sm font-medium text-gray-800 dark:text-white">
-                    Your Username
+                   <div>
+                  <label
+                    for="email"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Your email
                   </label>
                   <input
-                    type="text"
-                    name="username"
-                    id="username"
-                    value={formData.username}
+                    type="email"
+                    name="email"
+                    id="email"
+                    value={formData.email}
                     onChange={handleInputChange}
                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="UserName"
+                    placeholder="name@company.com"
                     required=""
                   />
-                  {errors.username && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.username}
-                    </p>
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
                   )}
                 </div>
                 <div>

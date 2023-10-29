@@ -8,7 +8,7 @@ const createUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         const hashedconfirmPassword = await bcrypt.hash(confirmpassword, saltRounds);
 
-        // Remove the hashing of confirmation password
+        
         await User.create(firstname, lastname, username, email, hashedPassword, hashedconfirmPassword);
         res.status(201).json({ success: true, message: 'User added successfully' });
     } catch (err) {

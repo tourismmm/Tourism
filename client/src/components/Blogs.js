@@ -10,17 +10,23 @@ function Blogs() {
 
   useEffect(() => {
     axios
-      .get("https://jsonplaceholder.typicode.com/posts")
+      .get("http://localhost:5000")
       .then((response) => {
-        setBlogData(response.data);
+        setBlogData(response.data.blogs);
+        console.log(response.data)
+        
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []);
 
+
+
   const indexOfLastBlog = currentPage * blogsPerPage;
   const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
+console.log(blogData)
+
   const currentBlogs = blogData.slice(indexOfFirstBlog, indexOfLastBlog);
 
   const paginate = (pageNumber) => {

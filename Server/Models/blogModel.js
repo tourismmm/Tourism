@@ -4,7 +4,7 @@ const Blog = {};
 
 Blog.allblogs = async () => {
   try {
-    const result = await query('SELECT users.username, blog.title, blog.image FROM users INNER JOIN blog ON users.id = blog.user_id ORDER BY created_at DESC;');
+    const result = await query('SELECT blog.id ,users.username, blog.title, blog.image FROM users INNER JOIN blog ON users.id = blog.user_id ORDER BY created_at DESC;');
     return result.rows;
   } catch (err) {
     throw err;
@@ -14,7 +14,7 @@ Blog.allblogs = async () => {
 
 Blog.blogdetail = async (blogId) => {
   try {
-    const result = await query('SELECT users.username, blog.title, blog.detail, blog.image FROM users INNER JOIN blog ON users.id = blog.user_id where blog.id = $1;', [blogId]);
+    const result = await query('SELECT blog.id, users.username, blog.title, blog.detail, blog.image FROM users INNER JOIN blog ON users.id = blog.user_id where blog.id = $1;', [blogId]);
     return result.rows;
   } catch (err) {
     throw err;

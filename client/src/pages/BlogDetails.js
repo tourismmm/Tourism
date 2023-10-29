@@ -8,20 +8,20 @@ import img1 from "../assets/img1.jpg";
 function BlogDetails() {
   const [blogData, setBlogData] = useState(null);
   let { id } = useParams();
-  console.log(id);
+  // console.log(id);
 
   useEffect(() => {
     axios
-      .get(`https://jsonplaceholder.typicode.com/posts/${id}`)
+      .get(`http://localhost:5000/blog/${id}`)
       .then((response) => {
-        setBlogData(response.data);
-        console.log(response.data);
+        setBlogData(response.data.blog[0]);
+        console.log(blogData);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, [id]);
-
+  console.log(blogData);
   return (
     <>
       <Header />
@@ -33,7 +33,7 @@ function BlogDetails() {
                 {blogData.title ? blogData.title : "Title Not Available"}
               </h2>
               <p className="mb-4">
-                {blogData.body ? blogData.body : "Content Not Available"}
+                {blogData.detail ? blogData.detail : "Content Not Available"}
               </p>
             </div>
           ) : (
@@ -56,3 +56,4 @@ function BlogDetails() {
 }
 
 export default BlogDetails;
+

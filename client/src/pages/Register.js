@@ -5,10 +5,12 @@ import axios from "axios";
 
 function Register() {
   const [formData, setFormData] = useState({
+    firstname: "",
+    lastname: "",
     username: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    confirmpassword: "",
   });
   const [errors, setErrors] = useState({});
 
@@ -31,20 +33,15 @@ function Register() {
     return Object.keys(errors).length === 0;
   };
 
-  const redirectToLogin = () => {
-    window.location.href = "/login";
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       try {
         const response = await axios.post(
-          "http://localhost:3000/users/signup",
+          "http://localhost:5000/users/signup",
           formData
         );
         console.log(response.data.message);
-        redirectToLogin();
       } catch (error) {
         console.error("Error registering user:", error);
         setErrors(error.response.data.errors);
@@ -75,8 +72,10 @@ function Register() {
                   </label>
                   <input
                     type="text"
-                    name="firstName"
-                    id="firstName"
+                    name="firstname"
+                    id="firstname"
+                    value={formData.firstname}
+                    onChange={handleInputChange}
                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="firstName"
                     required=""
@@ -88,8 +87,10 @@ function Register() {
                   </label>
                   <input
                     type="text"
-                    name="lastName"
-                    id="lastName"
+                    name="lastname"
+                    id="lastname"
+                    value={formData.lastname}
+                    onChange={handleInputChange}
                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="lastName"
                     required=""
@@ -166,17 +167,17 @@ function Register() {
                   </label>
                   <input
                     type="password"
-                    name="confirmPassword"
-                    id="confirmPassword"
-                    value={formData.confirmPassword}
+                    name="confirmpassword"
+                    id="confirmpassword"
+                    value={formData.confirmpassword}
                     onChange={handleInputChange}
                     placeholder="••••••••"
                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required=""
                   />
-                  {errors.confirmPassword && (
+                  {errors.confirmpassword && (
                     <p className="text-red-500 text-xs mt-1">
-                      {errors.confirmPassword}
+                      {errors.confirmpassword}
                     </p>
                   )}
                 </div>
