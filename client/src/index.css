@@ -22,3 +22,14 @@
 .formborder {
   border: 1px solid;
 }
+
+.formborder {
+  border-width: 2px;
+  border-style: solid;
+  border-image: linear-gradient(
+      to right,
+      rgb(250, 141, 177),
+      rgb(246, 255, 126)
+    )
+    1;
+}
